@@ -1,28 +1,25 @@
-const { authJwt } = require("../middlewares");
+const { authJwt, verifyUser } = require("../middlewares");
 const controller = require("../controllers/user.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
-      "Origin, Content-Type, Accept"
+      "Origin, Content-Type, Accept",
+      'Access-Control-Allow-Credentials',
     );
     next();
   });
 
-  app.get("/api/test/all", controller.allAccess);
-
-  app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
-
   app.get(
-    "/api/test/institution",
-    [authJwt.verifyToken, authJwt.isInstitution],
-    controller.moderatorBoard
+    '/user',
+    [authJwt.verifyToken],
+    controller.userInfo
   );
 
-  app.get(
-    "/api/test/voluntair",
-    [authJwt.verifyToken, authJwt.isVoluntair],
-    controller.adminBoard
+  app.put(
+    "/user",
+    [authJwt.verifyToken, verifyUser.checkDuplicateEmail],
+    controller.updateUser
   );
 };

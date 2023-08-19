@@ -4,22 +4,31 @@ const cookieSession = require("cookie-session");
 
 const app = express();
 
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
+let whitelist = ['http://localhost:3000'];
+
+let corsOptions = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+    } else {
+        callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
+}
 
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
-app.use(express.json());
+app.use(express.json({limit:'50mb'}));
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit:'50mb' }));
 
 app.use(
   cookieSession({
-    name: "bezkoder-session",
-    keys: ["COOKIE_SECRET"], // should use as secret environment variable
+    name: "ruahcollab-session",
+    keys: ["DHJFHJshfsdhsodufhsdofhjhjjjhjhjhjhfh2838hafjhfahyqh"], // should use as secret environment variable
     httpOnly: true
   })
 );
@@ -31,7 +40,7 @@ const Role = db.role;
 const dbConfig = require("./app/config/db.config");
 
 db.mongoose
-  .connect(`mongodb://${dbConfig.USER}:${dbConfig.PASS}@${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+  .connect('mongodb+srv://acaodoespiritowebapi:sgGpxs4ns4Lsshyq@cluster0.zhfreiq.mongodb.net/?retryWrites=true&w=majority',{//`mongodb://${dbConfig.USER}:${dbConfig.PASS}@${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -86,6 +95,8 @@ app.get("/", (req, res) => {
 // routes
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
+require('./app/routes/demand.routes')(app);
+require('./app/routes/subscription.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

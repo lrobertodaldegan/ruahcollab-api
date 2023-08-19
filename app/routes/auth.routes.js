@@ -1,25 +1,32 @@
-const { verifySignUp } = require("../middlewares");
+const { verifyUser } = require("../middlewares");
 const controller = require("../controllers/auth.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
+      'Access-Control-Allow-Credentials',
       "Origin, Content-Type, Accept"
     );
     next();
   });
 
   app.post(
-    "/api/auth/signup",
+    "/auth/v/signup",
     [
-      verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted
+      verifyUser.checkDuplicateEmail,
     ],
-    controller.signup
+    controller.voluntairSignUp
   );
 
-  app.post("/api/auth/signin", controller.signin);
+  app.post(
+    "/auth/i/signup",
+    [
+      verifyUser.checkDuplicateEmail,
+    ],
+    controller.institutionSignUp
+  );
 
-  app.post("/api/auth/signout", controller.signout);
+  app.post("/auth/signin", controller.signin);
+  app.post("/auth/signout", controller.signout);
 };
