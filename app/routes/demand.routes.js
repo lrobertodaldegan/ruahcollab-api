@@ -12,31 +12,31 @@ module.exports = function(app) {
   });
 
   app.get(
-    "/demand", 
+    "/ruahcollab/demand", 
     [authJwt.verifyToken],
     controller.demands
   );
 
   app.get(
-    "/demand/institution", 
+    "/ruahcollab/demand/institution", 
     [authJwt.verifyToken, verifyUser.justInstitution],
     controller.institutionDemands
   );
 
   app.post(
-    "/demand",
+    "/ruahcollab/demand",
     [authJwt.verifyToken, verifyUser.justInstitution],
     controller.newDemand
   );
 
   app.put(
-    "/demand/:demandId",
+    "/ruahcollab/demand/:demandId",
     [authJwt.verifyToken, verifyUser.justInstitution],
     controller.updateDemand
   );
 
   app.delete(
-    "/demand/:demandId",
+    "/ruahcollab/demand/:demandId",
     [authJwt.verifyToken, verifyUser.justInstitution],
     controller.deleteDemand
   );

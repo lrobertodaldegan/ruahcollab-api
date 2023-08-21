@@ -12,7 +12,7 @@ module.exports = function(app) {
   });
 
   app.post(
-    "/auth/v/signup",
+    "/ruahcollab/auth/v/signup",
     [
       verifyUser.checkDuplicateEmail,
     ],
@@ -20,13 +20,13 @@ module.exports = function(app) {
   );
 
   app.post(
-    "/auth/i/signup",
+    "/ruahcollab/auth/i/signup",
     [
       verifyUser.checkDuplicateEmail,
     ],
     controller.institutionSignUp
   );
 
-  app.post("/auth/signin", controller.signin);
-  app.post("/auth/signout", controller.signout);
+  app.post("/ruahcollab/auth/signin", controller.signin);
+  app.post("/ruahcollab/auth/signout", controller.signout);
 };

@@ -12,13 +12,13 @@ module.exports = function(app) {
   });
 
   app.get(
-    '/user',
+    '/ruahcollab/user',
     [authJwt.verifyToken],
     controller.userInfo
   );
 
   app.put(
-    "/user",
+    "/ruahcollab/user",
     [authJwt.verifyToken, verifyUser.checkDuplicateEmail],
     controller.updateUser
   );

@@ -4,13 +4,14 @@ const cookieSession = require("cookie-session");
 
 const app = express();
 
-let whitelist = ['http://localhost:3000'];
+let whitelist = ['https://rc.acaodoespirito.com.br', 'https://acaodoespirito.com.br', 'acaodoespirito.com.br', 'rc.acaodoespirito.com.br'];
 
 let corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1) {
         callback(null, true)
     } else {
+        console.log('Blocked Origin: ' + origin);
         callback(new Error('Not allowed by CORS'))
     }
   },
@@ -40,7 +41,7 @@ const Role = db.role;
 const dbConfig = require("./app/config/db.config");
 
 db.mongoose
-  .connect('mongodb+srv://acaodoespiritowebapi:sgGpxs4ns4Lsshyq@cluster0.zhfreiq.mongodb.net/?retryWrites=true&w=majority',{//`mongodb://${dbConfig.USER}:${dbConfig.PASS}@${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+  .connect('`mongodb://${dbConfig.USER}:${dbConfig.PASS}@${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -88,7 +89,7 @@ function initial() {
 //mongoose
 
 // simple route
-app.get("/", (req, res) => {
+app.get("/ruahcollab/", (req, res) => {
   res.json({ message: "Welcome to ruachcollab application." });
 });
 

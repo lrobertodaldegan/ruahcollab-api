@@ -12,31 +12,31 @@ module.exports = function(app) {
   });
   //consultar inscricoes realizadas pelo voluntario
   app.get(
-    "/subscription", 
+    "/ruahcollab/subscription", 
     [authJwt.verifyToken, verifyUser.justVoluntair],
     controller.voluntairSubscriptions
   );
   //consutlar inscricoes nas demandas da instituicao
   app.get(
-    "/subscription/institution", 
+    "/ruahcollab/subscription/institution", 
     [authJwt.verifyToken, verifyUser.justInstitution],
     controller.subscriptionsByInstitutionDemands
   );
   //nova inscricao
   app.post(
-    "/subscription",
+    "/ruahcollab/subscription",
     [authJwt.verifyToken, verifyUser.justVoluntair],
     controller.submitSubscription
   );
   //aceitar inscricao
   app.put(
-    "/subscription/:subscriptionId",
+    "/ruahcollab/subscription/:subscriptionId",
     [authJwt.verifyToken, verifyUser.justInstitution],
     controller.acceptSubscription
   );
   //cancelar inscricao
   app.delete(
-    "/subscription/:subscriptionId",
+    "/ruahcollab/subscription/:subscriptionId",
     [authJwt.verifyToken, verifyUser.justVoluntair],
     controller.cancelSubscription
   );
