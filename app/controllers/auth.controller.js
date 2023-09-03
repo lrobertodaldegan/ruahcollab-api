@@ -85,11 +85,13 @@ exports.signin = (req, res) => {
                                   allowInsecureKeySizes: true,
                                   expiresIn: 3600,//1 hour
                                 });
-        req.session.token = token;//set-cookie
+
+        res.setHeader('Authorization', token);
 
         res.status(200).send({
           id: user._id,
           role: authorities,
+          token: token
         });
     }).catch(err => errorHandler(err, res));
 };

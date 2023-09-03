@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 
 verifyToken = (req, res, next) => {
-  let token = req.session.token;
+  let token = req.get('Authorization');
 
   if (!token)
     return res.status(403).send({ message: "Forbidden!" });
