@@ -1,4 +1,4 @@
-const { verifyUser } = require("../middlewares");
+const { verifyUser, authJwt } = require("../middlewares");
 const controller = require("../controllers/auth.controller");
 
 module.exports = function(app) {
@@ -25,6 +25,14 @@ module.exports = function(app) {
       verifyUser.checkDuplicateEmail,
     ],
     controller.institutionSignUp
+  );
+
+  app.post(
+    "/ruahcollab/auth/refresh",
+    [
+      authJwt.verifyToken,
+    ],
+    controller.refresh
   );
 
   app.post("/ruahcollab/auth/signin", controller.signin);

@@ -132,20 +132,48 @@ exports.demands = (req, res) => {
   .catch(err => errorHandler(err, res));
 }
 
+exports.institutionDemand = (req, res) => {
+
+  Demand.find({_id:req.params['demandId'], institution:req.userId}).populate("institution").exec()
+  .then(demands => {
+    if(!demands || demands.length < 1){
+      res.status(204).send();
+    } else {
+      let demand = demands[0];
+
+      Subscription.find({demand:demand._id}).populate('voluntair').exec()
+      .then(subs => {
+        if(subs && subs.length > 0){
+          demand = formatReturn(demand, subs.length);
+
+          demand.subscriptions = subs;
+        }
+
+        res.status(200).send(demand);
+      });
+    }
+  })
+  .catch(err => errorHandler(err, res));
+}
+
 exports.institutionDemands = (req, res) => {
   Demand.find({institution:req.userId}).populate("institution").exec()
-  .then(demands => {
+  .then(async demands => {
     if(!demands){
       res.status(204).send();
     } else {
       let result = [];
 
-      demands.map(demand => {
-        let d = formatReturn(demand);
+      for(let i=0; i < demands.length; i++){
+        let demand = demands[i];
+
+        let subs = await Subscription.find({demand:demand._id}).exec();
+
+        let d = formatReturn(demand, subs.length);
         d.id = demand._id;
 
         result.push(d);
-      });
+      }
 
       res.status(200).send(result);
     }

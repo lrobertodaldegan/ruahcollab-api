@@ -22,4 +22,16 @@ module.exports = function(app) {
     [authJwt.verifyToken, verifyUser.checkDuplicateEmail],
     controller.updateUser
   );
+
+  app.post(
+    "/ruahcollab/user/forgot",
+    [],
+    controller.sendResetPassword
+  );
+
+  app.post(
+    "/ruahcollab/user/code",
+    [],
+    controller.codeValidation
+  );
 };

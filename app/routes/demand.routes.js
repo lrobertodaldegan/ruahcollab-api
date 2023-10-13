@@ -23,6 +23,12 @@ module.exports = function(app) {
     controller.institutionDemands
   );
 
+  app.get(
+    "/ruahcollab/demand/:demandId", 
+    [authJwt.verifyToken, verifyUser.justInstitution],
+    controller.institutionDemand
+  );
+
   app.post(
     "/ruahcollab/demand",
     [authJwt.verifyToken, verifyUser.justInstitution],

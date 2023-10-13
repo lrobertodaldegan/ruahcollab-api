@@ -2,14 +2,6 @@ const { authJwt, verifyUser } = require("../middlewares");
 const controller = require("../controllers/subscription.controller");
 
 module.exports = function(app) {
-  app.use(function(req, res, next) {
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, Content-Type, Accept",
-      'Access-Control-Allow-Credentials',
-    );
-    next();
-  });
   //consultar inscricoes realizadas pelo voluntario
   app.get(
     "/ruahcollab/subscription", 

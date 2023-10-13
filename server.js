@@ -70,16 +70,24 @@ app.get("/ruahcollab/", (req, res) => {
 app.use((_req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'https://rc.acaodoespirito.com.br');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,UserAgent,X-Requested-With,Accept');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,DELETE,POST');
   res.header('Access-Control-Allow-Credentials', true);
  
   next();
 });
+
+// app.use((_req, res, next) => {
+//  console.log(`Req: body: ${_req.body ? JSON.stringify(_req.body) : 'empty'}, query: ${_req.params ? JSON.stringify(_req.params) : 'empty'}`);
+
+//  next();
+// });
  
 // routes
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 require('./app/routes/demand.routes')(app);
 require('./app/routes/subscription.routes')(app);
+require('./app/routes/device.routes')(app);
  
 // set port, listen for requests
 const PORT = 21017;

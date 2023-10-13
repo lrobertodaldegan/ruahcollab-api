@@ -2,6 +2,7 @@ const config = require("../config/auth.config");
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
+const Device = db.device;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
@@ -33,7 +34,20 @@ exports.institutionSignUp = (req, res) => {
       user.role = role._id;
 
       user.save().then(user => {
-        res.status(201).send({ message: `User ${user.name} was registered successfully!` });
+        let successMsg = { message: `User ${user.name} was registered successfully!` };
+
+        if(req.body.device){
+          const device = new Device({
+            deviceId: req.body.device.id,
+            uniqueId: req.body.device.uniqueId,
+            user: user._id
+          });
+  
+          device.save().then(device => res.status(201).send(successMsg))
+                        .catch(err => errorHandler(err, res));
+        } else {
+          res.status(201).send(successMsg);
+        }
       }).catch(err => errorHandler(err, res));
     }).catch(err => errorHandler(err, res));
   }).catch(err => errorHandler(err, res));
@@ -55,7 +69,20 @@ exports.voluntairSignUp = (req, res) => {
       user.role = role._id;
 
       user.save().then(user => {
-        res.status(201).send({ message: `User ${user.name} was registered successfully!` });
+        let successMsg = { message: `User ${user.name} was registered successfully!` };
+
+        if(req.body.device){
+          const device = new Device({
+            deviceId: req.body.device.id,
+            uniqueId: req.body.device.uniqueId,
+            user: user._id
+          });
+  
+          device.save().then(device => res.status(201).send(successMsg))
+                        .catch(err => errorHandler(err, res));
+        } else {
+          res.status(201).send(successMsg);
+        }
       }).catch(err => errorHandler(err, res));
     }).catch(err => errorHandler(err, res));
   }).catch(err => errorHandler(err, res));
@@ -83,7 +110,7 @@ exports.signin = (req, res) => {
                                 {
                                   algorithm: 'HS256',
                                   allowInsecureKeySizes: true,
-                                  expiresIn: 3600,//1 hour
+                                  expiresIn: 5184000,//60 days
                                 });
 
         res.setHeader('Authorization', token);
@@ -94,6 +121,32 @@ exports.signin = (req, res) => {
           token: token
         });
     }).catch(err => errorHandler(err, res));
+};
+
+exports.refresh = async (req, res) => {
+  User.findById(req.userId).populate("role").exec()
+      .then(user => {
+        if (!user)
+          return res.status(404).send({ message: "User Not found." });
+
+        var authorities = `ROLE_${user.role.name.toUpperCase()}`;
+
+        const token = jwt.sign({ id: user._id, role: authorities},
+                                config.secret,
+                                {
+                                  algorithm: 'HS256',
+                                  allowInsecureKeySizes: true,
+                                  expiresIn: 5184000,//60 days
+                                });
+
+        res.setHeader('Authorization', token);
+
+        res.status(200).send({
+          id: user._id,
+          role: authorities,
+          token: token
+        });
+      }).catch(err => errorHandler(err, res));
 };
 
 exports.signout = async (req, res) => {

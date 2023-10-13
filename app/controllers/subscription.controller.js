@@ -156,7 +156,7 @@ exports.subscriptionsByInstitutionDemands = (req, res) => {
     .then(subs => {
       if(subs){
         subs.map(s => {
-          if(`${s.demand.institution._id}` === `${req.userId}`){
+          if(`${s.demand?.institution._id}` === `${req.userId}`){
             result.push({
               id:s._id,
               date:s.date,
